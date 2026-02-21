@@ -1,0 +1,32 @@
+{
+  "name": "plan-and-execute-ts",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "start:history": "tsx src/plan-and-execute-with-history.ts",
+    "build": "tsc",
+    "checkpointer:01": "tsx examples/checkpointer/01-memory-saver.ts",
+    "checkpointer:02": "tsx examples/checkpointer/02-custom-state.ts",
+    "checkpointer:03": "tsx examples/checkpointer/03-delete-messages.ts",
+    "checkpointer:04": "tsx examples/checkpointer/04-summarize-messages.ts",
+    "checkpointer:05": "tsx examples/checkpointer/05-dynamic-prompt.ts",
+    "hitl:01": "tsx examples/human-in-the-loop/01-approval-workflow.ts"
+  },
+  "dependencies": {
+    "@langchain/core": "^1.1.26",
+    "@langchain/langgraph": "^1.1.2",
+    "@langchain/openai": "^1.2.0",
+    "dotenv": "^16.4.0",
+    "langchain": "^1.2.0",
+    "zod": "^3.23.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.0.0"
+  }
+}

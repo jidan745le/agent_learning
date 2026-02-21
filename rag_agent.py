@@ -13,6 +13,7 @@ import asyncio
 
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
+from pydantic import Field
 from langchain.tools import tool
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.messages import ToolMessage
@@ -49,8 +50,9 @@ def main():
 
     # ========== 3) 定义检索工具并创建 Agent ==========
     @tool(response_format="content_and_artifact")
-    def retrieve_context(query: str):
+    def retrieve_context(query: str = Field(description="The user's question or search phrase to find relevant context from the indexed documents")):
         """Retrieve information to help answer a query."""
+        print(f"Retrieving context for query: {query}")
         retrieved_docs = vector_store.similarity_search(query, k=2)
         serialized = "\n\n".join(
             (f"Source: {doc.metadata}\nContent: {doc.page_content}")
@@ -86,7 +88,10 @@ def main():
                         if isinstance(update, dict) and "messages" in update:
                             for m in update["messages"]:
                                 if getattr(m, "tool_calls", None):
-                                    print("\n调用工具:", [tc["name"] if isinstance(tc, dict) else tc.name for tc in m.tool_calls])
+                                    for tc in m.tool_calls:
+                                        name = tc["name"] if isinstance(tc, dict) else getattr(tc, "name", "")
+                                        args = (tc.get("args") or (tc.get("function") or {}).get("arguments", "")) if isinstance(tc, dict) else getattr(tc, "args", "")
+                                        print(f"\n调用工具: {name}  arguments: {args}")
                                 elif isinstance(m, ToolMessage):
                                     content = m.content or ""
                                     preview = content[:200] + "..." if len(content) > 200 else content
